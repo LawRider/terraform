@@ -1,0 +1,14 @@
+terraform init
+terraform apply
+
+ssh to server
+Check /var/log/cloud-init-output.log
+
+Open Jenkins at ip:8080 via browser
+Create freestyle project and set Git URL as a source
+Add to Build step Execute shell command
+./jenkins-terraform.sh
+Build Now
+
+terraform output
+
