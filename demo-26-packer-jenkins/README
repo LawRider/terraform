@@ -5,10 +5,12 @@ ssh to server
 Check /var/log/cloud-init-output.log
 
 Open Jenkins at ip:8080 via browser
-Create freestyle project and set Git URL as a source
+Create freestyle project 'packer-build' and set Git URL https://github.com/LawRider/packer-demo as a source
 Add to Build step Execute shell command
 ./jenkins-terraform.sh
 Build Now
 
-terraform output
+Create new freestyle project 'terraform-apply' in Jenkins and set Git URL https://github.com/LawRider/terraform as a source
+Add to Build step Execute shell command
+./scripts/jenkins-run-terraform.sh
 
