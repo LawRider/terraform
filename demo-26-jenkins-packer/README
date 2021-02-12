@@ -1,4 +1,9 @@
 terraform init
+
+Check the latest non-LTS version of Jenkins available at https://www.jenkins.io/download/ and change variable JENKINS_VERSION in vars.tf
+Check the latest non-alpha version of Terraform at https://releases.hashicorp.com/terraform/ and change variable TERRAFORM_VERSION in vars.tf
+Check the latest version of Packer at https://releases.hashicorp.com/packer/ and change variable PACKER_VERSION in vars.tf
+
 terraform apply
 
 ssh to server via jenkins IP
@@ -10,7 +15,7 @@ Add to Build step Execute shell command
 ./jenkins-terraform.sh
 Build Now. Check result
 
-Create new freestyle project 'terraform-apply' in Jenkins and set Git URL https://github.com/LawRider/terraform as a source
+Create freestyle project 'terraform-apply' and set Git URL https://github.com/LawRider/terraform as a source
 Add to Build step Execute shell command
 ./scripts/jenkins-run-terraform.sh
 ssh to server via app IP

@@ -1,0 +1,47 @@
+terraform init
+
+Get ECS AMI IDs from https://docs.aws.amazon.com/AmazonECS/latest/developerguide/ecs-optimized_AMI.html and put them into vars.tf
+Get Ubuntu AMI IDs from http://cloud-images.ubuntu.com/locator/ec2/ and put them into vars.tf
+
+Check the latest LTS version of Jenkins available at https://www.jenkins.io/download/ and change variable JENKINS_VERSION in vars.tf
+Check the latest non-alpha version of Terraform at https://releases.hashicorp.com/terraform/ and change variable TERRAFORM_VERSION in vars.tf
+
+terraform apply
+
+ssh to server via jenkins IP from output
+ssh -i mykey ubuntu@ip
+sudo -s
+cat /var/lib/jenkins/secrets/initialAdminPassword
+
+Open jenkins at IP:8080 via browser
+Install Parameterized Trigger plugin
+
+ssh to server via jenkins IP from output
+sudo su - jenkins
+aws configure
+Enter AWS Access Key ID, AWS Secret Access Key and Default region name
+
+Create freestyle project 'docker-demo' and set Git URL https://github.com/LawRider/docker-demo as a source
+Add to Build step Execute shell command
+docker build -t XXX087240XXX.dkr.ecr.eu-central-1.amazonaws.com/myapp:${GIT_COMMIT} .
+aws ecr get-login-password --region eu-central-1 | docker login --username AWS --password-stdin XXX087240XXX.dkr.ecr.eu-central-1.amazonaws.com
+docker push XXX087240XXX.dkr.ecr.eu-central-1.amazonaws.com/myapp:${GIT_COMMIT}
+
+Create freestyle project 'docker-demo-deploy' and set Git URL https://github.com/LawRider/terraform as a source
+In General set This project is parameterized - String Parameter - MYAPP_VERSION
+Add to Build step Execute shell command
+cd demo-29-jenkins-ecr-ecs
+scripts/configure-remote-state.sh
+touch mykey mykey.pub
+terraform apply -target aws_ecs_service.myapp-service -var MYAPP_SERVICE_ENABLE="1" -var MYAPP_VERSION=${MYAPP_VERSION}
+
+Configure 'docker-demo' again
+Add post-build action - Trigger parameterized build on other projects - Projects to build - docker-demo-deploy
+Add Parameters - Predefined parameters MYAPP_VERSION=${GIT_COMMIT} 
+
+ssh to server via app IP
+
+Check that nginx and nodejs are running
+ps axu|grep -E "nginx|nodejs"
+Check app
+curl localhost
