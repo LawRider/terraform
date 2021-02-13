@@ -1,0 +1,80 @@
+$ terraform console
+> help
+The Terraform console allows you to experiment with Terraform interpolations.
+You may access resources in the state (if you have one) just as you would
+from a configuration. For example: "aws_instance.foo.id" would evaluate
+to the ID of "aws_instance.foo" if it exists in your state.
+
+Type in the interpolation to test and hit <enter> to see the result.
+
+To exit the console, type "exit" and hit <enter>, or use Control-C or
+Control-D.
+>
+
+> "hello"
+"hello"
+>
+
+> replace("hello", "e", "!")
+"h!llo"
+>
+
+> "launched at ${timestamp()}"
+"launched at 2021-02-10T21:23:45Z"
+>
+
+> list("subnet-1","subnet-2","subnet-3")
+tolist([
+  "subnet-1",
+  "subnet-2",
+  "subnet-3",
+])
+> 
+
+> split(",", "subnet-1,subnet-2,subnet-3")
+tolist([
+  "subnet-1",
+  "subnet-2",
+  "subnet-3",
+])
+> 
+
+> element(list("subnet-1","subnet-2","subnet-3"), 0)
+"subnet-1"
+> element(list("subnet-1","subnet-2","subnet-3"), 1)
+"subnet-2"
+> element(list("subnet-1","subnet-2","subnet-3"), 2)
+"subnet-3"
+> 
+
+> slice(list("subnet-1","subnet-2","subnet-3"), 0, 2)
+tolist([
+  "subnet-1",
+  "subnet-2",
+])
+> 
+
+> join(",", slice(list("subnet-1","subnet-2","subnet-3"), 0, 2))
+"subnet-1,subnet-2"
+> 
+
+> map("eu-west-1", "ami-1", "us-east-1", "ami-2")
+tomap({
+  "eu-west-1" = "ami-1"
+  "us-east-1" = "ami-2"
+})
+> 
+
+> lookup(map("eu-west-1", "ami-1", "us-east-1", "ami-2"), "us-east-1")
+"ami-2"
+> 
+
+> index(list("subnet-1", "subnet-2", "subnet-3"), "subnet-2")
+1
+> 
+
+> substr("abcd", 1, 3)
+"bcd"
+> substr("abcd", -2, 2)
+"cd"
+> exit

@@ -1,0 +1,17 @@
+Set real domain for ECS
+sed 's/domain.com/real_domain.com/' -i ecs.tf
+
+terraform init
+terraform apply
+
+Issue SSL certificate for *.ecs.domain.com via ACM and validate it
+Go to ECR and get repository URI
+
+URI="217087240544.dkr.ecr.eu-central-1.amazonaws.com/my-service"
+sudo rc-service docker start
+docker pull nginx
+docker tag nginx "$uri":latest
+./ecr-login.sh $URI
+docker push "$uri":latest
+
+Go to ELB, copy DNS name and open it in browser

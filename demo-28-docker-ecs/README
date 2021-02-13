@@ -1,0 +1,29 @@
+terraform init
+
+Copy tfstate so that terraform knows that ECR is already created
+cp ../demo-27-docker-ecr/terraform.tfstate .
+
+Get ECS AMI IDs from https://docs.aws.amazon.com/AmazonECS/latest/developerguide/ecs-optimized_AMI.html and put them into vars.tf
+
+terraform plan
+terraform apply
+
+$ ssh -i mykey ec2-user@ec2-ip
+[ec2-user@ip-10-0-2-33 ~]$ ps axu|grep agent
+root      3944  0.0  1.8 125708 18944 ?        Ssl  16:24   0:00 /usr/bin/amazon-ssm-agent
+root      4448  0.0  3.0 135472 30456 ?        Sl   16:24   0:00 /usr/bin/ssm-agent-worker
+root      4735  0.0  0.0    940     4 ?        Ss   16:24   0:00 /sbin/docker-init -- /agent
+root      4764  0.0  2.7 737236 27948 ?        Sl   16:24   0:00 /agent
+ec2-user  5480  0.0  0.0 119420   916 pts/0    S+   16:31   0:00 grep --color=auto agent
+[ec2-user@ip-10-0-2-33 ~]$ cat /etc/ecs/ecs.config 
+ECS_CLUSTER=example-cluster
+[ec2-user@ip-10-0-2-33 ~]$ docker ps
+CONTAINER ID        IMAGE                                                     COMMAND                  CREATED             STATUS                   PORTS                    NAMES
+4cf3b392d9f0        217087240544.dkr.ecr.eu-central-1.amazonaws.com/myapp:1   "docker-entrypoint.s…"   6 minutes ago       Up 6 minutes             0.0.0.0:3000->3000/tcp   ecs-myapp-1-myapp-aee5f7efe9bcad8db701
+c7242f546237        amazon/amazon-ecs-agent:latest                            "/agent"                 7 minutes ago       Up 7 minutes (healthy)                            ecs-agent
+[ec2-user@ip-10-0-2-33 ~]$ curl localhost:3000
+Hello World!
+[ec2-user@ip-10-0-2-33 ~]$ tail /var/log/ecs/ecs-agent.log
+
+$ myapp-elb-435478000.eu-central-1.elb.amazonaws.com
+Hello World!

@@ -1,0 +1,6 @@
+terraform init
+terraform apply
+sudo rc-service docker start
+docker build -t XXX087240XXX.dkr.ecr.eu-central-1.amazonaws.com/myapp:1 .
+aws ecr get-login-password --region eu-central-1 | docker login --username AWS --password-stdin XXX087240XXX.dkr.ecr.eu-central-1.amazonaws.com
+docker push XXX087240XXX.dkr.ecr.eu-central-1.amazonaws.com/myapp:1

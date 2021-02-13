@@ -1,0 +1,56 @@
+$ terraform console
+> [for s in ["a", "b", "c"]: s]
+[
+  "a",
+  "b",
+  "c",
+]
+> [for s in ["a", "b", "c"]: upper(s)]
+[
+  "A",
+  "B",
+  "C",
+]
+> 
+
+> [for s in var.list1: s + 1]
+[
+  2,
+  11,
+  10,
+  102,
+  4,
+]
+> 
+
+> [for s in var.list2: upper(s)]
+[
+  "APPLE",
+  "PEAR",
+  "BANANA",
+  "MANGO",
+]
+> 
+
+> [for k, v in var.map1: k]
+[
+  "apple",
+  "banana",
+  "mango",
+  "pear",
+]
+> [for k, v in var.map1: v]
+[
+  5,
+  10,
+  0,
+  3,
+]
+> {for k, v in var.map1: v => k}
+{
+  "0" = "mango"
+  "10" = "banana"
+  "3" = "pear"
+  "5" = "apple"
+}
+> exit

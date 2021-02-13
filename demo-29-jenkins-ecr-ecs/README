@@ -31,18 +31,13 @@ Create freestyle project 'docker-demo-deploy' and set Git URL https://github.com
 In General set This project is parameterized - String Parameter - MYAPP_VERSION
 Add to Build step Execute shell command
 cd demo-29-jenkins-ecr-ecs
-scripts/configure-remote-state.sh
+scripts/configure-remote-state.sh # outdated, see content
 touch mykey mykey.pub
 terraform init
-terraform apply -target aws_ecs_service.myapp-service -var MYAPP_SERVICE_ENABLE="1" -var MYAPP_VERSION=${MYAPP_VERSION}
+terraform apply -target aws_ecs_service.myapp-service -auto-approve=true -var MYAPP_SERVICE_ENABLE="1" -var MYAPP_VERSION=${MYAPP_VERSION}
 
 Configure 'docker-demo' again
 Add post-build action - Trigger parameterized build on other projects - Projects to build - docker-demo-deploy
-Add Parameters - Predefined parameters MYAPP_VERSION=${GIT_COMMIT} 
+Add Parameters - Predefined parameters MYAPP_VERSION=${GIT_COMMIT}
 
-ssh to server via app IP
-
-Check that nginx and nodejs are running
-ps axu|grep -E "nginx|nodejs"
-Check app
-curl localhost
+Build docker-demo

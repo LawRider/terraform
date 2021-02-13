@@ -26,27 +26,19 @@ mount /var/lib/jenkins
 
 # install default-jre (needed for ubuntu 18.04)
 apt-get update
-apt-get install -y default-jre awscli
+apt-get install -y default-jre
 
-# install jenkins and docker
+# install jenkins, docker, awscli
 wget -q -O - https://pkg.jenkins.io/debian-stable/jenkins.io.key | apt-key add -
 echo "deb http://pkg.jenkins.io/debian-stable binary/" >> /etc/apt/sources.list
 apt-get update
-apt-get install -y "jenkins=${JENKINS_VERSION}" unzip docker.io
+apt-get install -y "jenkins=${JENKINS_VERSION}" unzip docker.io awscli
 
 # enable docker and add perms
 usermod -G docker jenkins
 systemctl enable docker
 service docker start
 service jenkins restart
-
-# install pip
-wget -q https://bootstrap.pypa.io/get-pip.py
-python get-pip.py
-python3 get-pip.py
-rm -f get-pip.py
-# install awscli
-pip install awscli
 
 # install terraform
 wget -q "https://releases.hashicorp.com/terraform/${TERRAFORM_VERSION}/terraform_${TERRAFORM_VERSION}_linux_amd64.zip" \

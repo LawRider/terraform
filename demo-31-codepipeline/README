@@ -1,0 +1,21 @@
+terraform init
+terraform apply
+
+git clone https://github.com/LawRider/docker-demo.git
+cd docker-demo
+cp ../app/config/* .
+cp ../app/scripts/create-new-task-def.sh .
+git remote -v
+git remote remove origin
+
+Go to IAM - Users - terraform admin - Security credentials - SSH keys for AWS CodeCommit - Upload SSH public key
+Copy SSH key ID
+Go to CodeCommit - demo repository - Clone SSH
+
+git remote add origin ssh://<ssh_key_id>@git-codecommit.eu-central-1.amazonaws.com/v1/repos/demo
+ssh-add ../mykey
+git add .
+git commit -am "Deploy code"
+git push -u origin master
+
+Go to CodePipeline to check if everything is OK
